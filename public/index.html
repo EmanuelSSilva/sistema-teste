@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Manipulação de Planilhas</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- CABEÇALHO -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-table"></i>
+                    <h1>Manipulador de Planilhas</h1>
+                </div>
+                <div class="header-info">
+                    <span id="status-conexao" class="status online">
+                        <i class="fas fa-circle"></i> Online
+                    </span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="main-content">
+        <div class="container">
+            
+            <!-- SEÇÃO DE UPLOAD -->
+            <section class="upload-section" id="upload-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-upload"></i> Upload de Planilhas</h2>
+                    <p>Envie seus arquivos Excel (.xlsx, .xls) ou CSV para começar</p>
+                </div>
+
+                <div class="upload-area" id="upload-area">
+                    <div class="upload-content">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <h3>Arraste e solte seus arquivos aqui</h3>
+                        <p>ou clique para selecionar</p>                        <input type="file" id="file-input" multiple accept=".xlsx,.xls,.csv,.txt" hidden>
+                        <button type="button" class="btn btn-primary" onclick="document.getElementById('file-input').click()">
+                            <i class="fas fa-folder-open"></i> Escolher Arquivos
+                        </button>
+                        
+                        <!-- Botão de teste temporário -->
+                        <button type="button" class="btn btn-secondary" onclick="testarUploadMultiplo()" style="margin-top: 0.5rem;">
+                            <i class="fas fa-bug"></i> Teste Upload Múltiplo
+                        </button>
+                    </div>
+                </div>
+
+                <div class="upload-info">
+                    <div class="info-item">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Formatos aceitos: .xlsx, .xls, .csv, .txt</span>
+                    </div>                    <div class="info-item">
+                        <i class="fas fa-weight-hanging"></i>
+                        <span>Tamanho máximo: 100MB por arquivo</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-layer-group"></i>
+                        <span>Máximo: 10 arquivos por vez</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PROGRESS BAR -->
+            <div class="progress-container" id="progress-container" style="display: none;">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <span class="progress-text" id="progress-text">Processando...</span>
+            </div>
+
+            <!-- SEÇÃO DE ARQUIVOS CARREGADOS -->
+            <section class="files-section" id="files-section" style="display: none;">
+                <div class="section-header">
+                    <h2><i class="fas fa-files-o"></i> Arquivos Carregados</h2>
+                    <div class="section-actions">
+                        <button class="btn btn-secondary" onclick="limparTodosArquivos()">
+                            <i class="fas fa-trash"></i> Limpar Todos
+                        </button>
+                        <button class="btn btn-primary" onclick="analisarArquivos()">
+                            <i class="fas fa-search"></i> Analisar Estrutura
+                        </button>
+                    </div>
+                </div>
+
+                <div class="files-grid" id="files-grid">
+                    <!-- Arquivos serão inseridos aqui dinamicamente -->
+                </div>
+            </section>
+
+            <!-- SEÇÃO DE ANÁLISE -->
+            <section class="analysis-section" id="analysis-section" style="display: none;">
+                <div class="section-header">
+                    <h2><i class="fas fa-chart-bar"></i> Análise das Planilhas</h2>
+                    <p>Selecione as colunas que deseja combinar</p>
+                </div>
+
+                <div class="analysis-content">
+                    <div class="analysis-grid" id="analysis-grid">
+                        <!-- Análises serão inseridas aqui dinamicamente -->
+                    </div>
+                </div>
+
+                <div class="combination-controls">
+                    <div class="controls-group">
+                        <label for="output-filename">Nome do arquivo final:</label>
+                        <input type="text" id="output-filename" placeholder="planilha_combinada" value="planilha_combinada">
+                    </div>
+                    
+                    <div class="controls-group">
+                        <label>
+                            <input type="checkbox" id="include-origin" checked>
+                            Incluir coluna com origem dos dados
+                        </label>
+                    </div>
+
+                    <div class="controls-actions">
+                        <button class="btn btn-secondary" onclick="gerarPreview()">
+                            <i class="fas fa-eye"></i> Visualizar Preview
+                        </button>
+                        <button class="btn btn-success" onclick="combinarPlanilhas()">
+                            <i class="fas fa-magic"></i> Combinar Planilhas
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SEÇÃO DE PREVIEW -->
+            <section class="preview-section" id="preview-section" style="display: none;">
+                <div class="section-header">
+                    <h2><i class="fas fa-eye"></i> Preview dos Dados</h2>
+                    <p>Primeiras linhas da planilha que será gerada</p>
+                </div>
+
+                <div class="preview-content">
+                    <div class="preview-info" id="preview-info">
+                        <!-- Informações do preview -->
+                    </div>
+                    
+                    <div class="preview-table-container">
+                        <table class="preview-table" id="preview-table">
+                            <!-- Tabela de preview será inserida aqui -->
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SEÇÃO DE EXPORTAÇÃO -->
+            <section class="exports-section" id="exports-section" style="display: none;">
+                <div class="section-header">
+                    <h2><i class="fas fa-download"></i> Arquivos Exportados</h2>
+                    <p>Planilhas combinadas prontas para download</p>
+                </div>
+
+                <div class="exports-grid" id="exports-grid">
+                    <!-- Exportações serão inseridas aqui -->
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- RODAPÉ -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Sistema de Manipulação de Planilhas. Desenvolvido com ❤️ em JavaScript</p>
+        </div>
+    </footer>
+
+    <!-- MODAL DE LOADING -->
+    <div class="modal" id="loading-modal">
+        <div class="modal-content">
+            <div class="loading-spinner"></div>
+            <h3>Processando...</h3>
+            <p id="loading-message">Aguarde enquanto processamos seus arquivos</p>
+        </div>
+    </div>
+
+    <!-- MODAL DE ERRO -->
+    <div class="modal" id="error-modal">
+        <div class="modal-content error">
+            <div class="modal-header">
+                <h3><i class="fas fa-exclamation-triangle"></i> Erro</h3>
+                <button class="modal-close" onclick="fecharModal('error-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="error-message">Ocorreu um erro</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="fecharModal('error-modal')">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE SUCESSO -->
+    <div class="modal" id="success-modal">
+        <div class="modal-content success">
+            <div class="modal-header">
+                <h3><i class="fas fa-check-circle"></i> Sucesso</h3>
+                <button class="modal-close" onclick="fecharModal('success-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="success-message">Operação realizada com sucesso</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="fecharModal('success-modal')">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATIONS -->
+    <div class="toast-container" id="toast-container">
+        <!-- Toasts serão inseridos aqui dinamicamente -->
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="js/main.js"></script>
+    <script src="js/upload.js"></script>
+    <script src="js/analysis.js"></script>
+    <script src="js/combination.js"></script>
+    <script src="js/utils.js"></script>
+</body>
+</html>

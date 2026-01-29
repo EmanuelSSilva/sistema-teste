@@ -1,0 +1,97 @@
+# Dependências
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Logs
+logs/
+*.log
+
+# Cache do NPM
+.npm
+
+# Arquivos temporários
+*.tmp
+*.temp
+
+# Configurações do ambiente
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Arquivos de sistema
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Pastas de uploads e exports (arquivos temporários)
+uploads/*
+!uploads/.gitkeep
+exports/*
+!exports/.gitkeep
+
+# Arquivos de backup
+*.bak
+*.backup
+*~
+
+# Arquivos do editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Cobertura de testes
+coverage/
+.nyc_output/
+
+# Arquivos de teste
+test-results/
+junit.xml
+
+# Build output
+dist/
+build/
+
+# Arquivos específicos do Windows
+*.lnk
+
+# Arquivos específicos do macOS
+.AppleDouble
+.LSOverride
+
+# Arquivos específicos do Linux
+*~
+
+# Arquivos Excel temporários
+~$*.xlsx
+~$*.xls
+.~lock.*
+
+# Arquivos CSV temporários
+*.csv~
+
+# Pasta de configuração local
+config/local.js
+
+# Chaves e certificados
+*.pem
+*.key
+*.cert
+*.crt
+
+# Arquivos de sessão
+sessions/
+
+# Cache
+.cache/
